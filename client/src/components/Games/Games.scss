@@ -1,0 +1,20 @@
+.Games {
+    background-color: black;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 25px;
+    color: white;
+    
+    flex-direction: column;
+
+    .btn-goBack {
+        position: absolute;
+        top: 7%;
+        left: 2%;
+        transform: translate(-2%,7%);
+
+    }
+}
