@@ -1,28 +1,44 @@
 ul {
 	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
 	background-color: rgb(73, 73, 73);
+	margin-top: 0;
+
+	font-size: 25px;
+	font-family: monospace;
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	padding-left: 10px;
+	padding-top: 1px;
+	transition: 0.4s all ease-in-out;
 
 	li {
-        float: left;
-        margin: 0 auto;
-        text-align: center;
-        position: relative;
-        
-        a {
-			display: block;
+		padding-right: 10px;
+		height: 100%;
+
+		&[data-label="name"], &[data-label="tab-games"] {
+			a {
+				padding: 5px;
+				&:hover {
+					background-color: rgb(92, 92, 92);
+					border-radius: 5px;
+				}
+			}
+		}
+		a {
 			color: white;
-			text-align: center;
-			padding: 14px 16px;
 			text-decoration: none;
-			&:hover:not(.active) {
-				background-color: #111;
-            }
-            &.active {
-                background-color: #4caf50;
-            }
+		}
+
+		&[data-label="deagle"] {
+			margin-left: auto;
+			img {
+				width: 64px;
+			}
+		}
+
+		&[data-label="tab-games"] {
+			margin-left: 30px;
 		}
 	}
 }

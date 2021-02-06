@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState, useEffect} from "react"
 
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom" 
 
@@ -18,6 +18,14 @@ import Jackpot from "./components/Jackpot/Jackpot"
 import "./App.scss"
 
 const App = () => {
+    /* const [img1, setImg1] = useState("")
+    const [img2, setImg2] = useState("")
+
+    useEffect(() => {
+        import("./img/customer-satisfaction.png").then(img => setImg1(img.default)).catch(err => console.error(err))
+        import("./img/your-money-back-guaranteed.png").then(img => setImg2(img.default)).catch(err => console.error(err))
+    }, []); */
+
     return (
         <div className="app">            
             <Router basename="/">
@@ -33,6 +41,10 @@ const App = () => {
                     <Route path="/Games/jackpot" exact component={Jackpot}/>
                 </Switch>
             </Router>
+            {/* <footer>
+                <img className="img1" src={img1} alt="pixa"/>
+                <img className="img2" src={img2} alt="pixa"/>
+            </footer> */}
         </div>
     )
 }
