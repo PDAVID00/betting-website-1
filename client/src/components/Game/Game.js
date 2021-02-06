@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import "./Game.scss"
+import "./Game.scss";
+
+import Roulette from "../../img/Games/Roulette.jpg";
+import BlackJack from "../../img/Games/BlackJack.png";
+import Crash from "../../img/Games/Crash.jpg";
+import JackPot from "../../img/Games/JackPot.jpg";
+
+const Imgs = {
+	Roulette,
+	BlackJack,
+	Crash,
+	JackPot,
+};
 
 const Game = (props) => {
-	const [image, setImage] = useState("");
-
-	useEffect(() => {
-		import(`../../img/Games/${props.imgSrc}`).then((img) => {
-			setImage(img.default);
-		});
-	}, []);
 	return (
 		<div className="card">
-			<img
-				src={image}
-				alt="Avatar"
-			/>
+			<img src={Imgs[props.imgSrc]} alt="Avatar" />
 			<div className="container">
 				<h4>
 					<b>{props.label}</b>

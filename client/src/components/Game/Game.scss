@@ -3,7 +3,7 @@
 	transition: 0.4s;
 	border-radius: 7px;
 	background-color: #32383eb3;
-
+	
 	&:hover {
 		box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 		transform: scale(1.1);
@@ -16,6 +16,7 @@
 	.container {
 		h4 {
 			padding: 0px 16px;
+			background-color: #32383eb3;
 		}
 		p {
 			margin: 0;

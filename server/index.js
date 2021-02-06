@@ -1,8 +1,9 @@
+const path = require("path")
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 80;
 
 const router = require("./router");
 
@@ -25,8 +26,25 @@ let Games = {
 	roulette: {},
 	jackpot: {},
 };
-
+app.use(express.static("public"));
 app.use(router);
+app.use(function (req, res, next) {
+	const options = {
+		root: path.join(__dirname, "public"),
+		dotfiles: "deny",
+		headers: {
+			"x-timestamp": Date.now(),
+			"x-sent": true,
+		},
+	};
+	res.status(404).sendFile("./404.html", options, function (err) {
+		if (err) {
+			next(err);
+		} else {
+			console.log("Sent:", "404.html");
+		}
+	});
+});
 
 io.on("connection", (socket) => {
 	console.log("New connection received!");

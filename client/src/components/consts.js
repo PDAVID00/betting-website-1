@@ -1,4 +1,7 @@
-const BACK_END_URL = "localhost:5000";
-const SOCKET_URL = `ws://${BACK_END_URL}`
 
-module.exports = { BACK_END_URL, SOCKET_URL };
+
+
+const PORT = 80;
+const BACK_END_URL = `https://1d7e2ca87a36.ngrok.io`;
+
+module.exports = { BACK_END_URL };

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-	faArrowLeft,
 	faCoins,
 	faDice,
 	faChartLine,
@@ -11,15 +10,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import Game from "../Game/Game";
-
 import "./Games.scss";
+
 
 const Games = () => {
 	return (
 		<div className="Games">
-			<h3 className="headerName">Games Home</h3>
+			<h2 className="headerName">Games Home</h2>
 			<div className="display-divs">
-				<Game label="Roulette" imgSrc="Roulette.jpg">
+				<Game label="Roulette" imgSrc="Roulette">
 					<Link to="/Games/roulette">
 						<button>
 							<span>Play</span>
@@ -27,7 +26,7 @@ const Games = () => {
 						</button>
 					</Link>
 				</Game>
-				<Game label="BlackJack" imgSrc="BlackJack.png">
+				<Game label="BlackJack" imgSrc="BlackJack">
 					<Link to="/Games/BlackJack">
 						<button>
 							<span>Play</span>
@@ -35,7 +34,7 @@ const Games = () => {
 						</button>
 					</Link>
 				</Game>
-				<Game label="Crash" imgSrc="Crash.jpg">
+				<Game label="Crash" imgSrc="Crash">
 					<Link to="/Games/Crash">
 						<button>
 							<span>Play</span>
@@ -43,7 +42,7 @@ const Games = () => {
 						</button>
 					</Link>
 				</Game>
-				<Game label="JackPot" imgSrc="JackPot.jpg">
+				<Game label="JackPot" imgSrc="JackPot">
 					<Link to="/Games/JackPot">
 						<button>
 							<span>Play</span>
