@@ -1,15 +1,17 @@
 import React, { useState, useContext } from "react";
-import "./LogIn.scss";
+
+import { Link } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faUser,
 	faLock,
 	faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
+import "./LogIn.scss";
+import logo from "../../img/logo.png";
 
 import { configContext } from "../../App";
-
-import logo from "../../img/logo.png";
 
 const LogIn = () => {
 	const context = useContext(configContext);
@@ -22,8 +24,6 @@ const LogIn = () => {
 			<div className="mid-first-div">
 				<div className="mid-div">
 					<form className="form-LogIn">
-						{/* <h3>CSGO Lurk</h3> */}
-
 						<div className="input user-div">
 							<span>Username</span>
 							<div className="input-part">
@@ -47,9 +47,14 @@ const LogIn = () => {
 							</div>
 						</div>
 					</form>
+					<div className="btn-SignIn">
+						<button>
+							<Link to="/SignIn">Sign In</Link>
+						</button>
+					</div>
 					<div className="btn-submit">
 						<button>
-							Send <FontAwesomeIcon icon={faChevronRight} />
+							Submit <FontAwesomeIcon icon={faChevronRight} />
 						</button>
 					</div>
 				</div>

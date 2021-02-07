@@ -1,6 +1,9 @@
 * {
 	user-select: none;
 	font-family: Helvetica, "Courier New", Courier, monospace;
+	:hover, :focus {
+		outline: 0;
+	}
 }
 
 body {
