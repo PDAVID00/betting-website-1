@@ -3,7 +3,6 @@ ul {
 	background-color: rgb(73, 73, 73);
 	margin-top: 0;
 
-	font-size: 25px;
 	font-family: monospace;
 	display: flex;
 	align-items: center;
@@ -29,6 +28,15 @@ ul {
 			color: white;
 			text-decoration: none;
 			border-radius: 5px;
+			font-size: 25px;
+			font-weight: 700;
+			img {
+				width: 64px;
+			}
+		}
+
+		&.logo {
+			padding-top: 4px;
 		}
 
 		&.logInName {
@@ -39,7 +47,7 @@ ul {
 		}
 
 		&.login {
-			margin-left: 61%;
+			margin-left: 72%;
 		}
 		&.login {
 			a:hover {

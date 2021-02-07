@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, createContext, useEffect} from "react"
+
 
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom" 
-import { createBrowserHistory } from "history";
 
 import Nav from "./components/Nav/Nav"
 import LogIn from "./components/LogIn/LogIn"
@@ -19,9 +19,20 @@ import NotFound404 from "./components/404/404"
 
 import "./App.scss"
 
+
+export const configContext = createContext()
+
 const App = () => {
+    const [config, setconfig] = useState({
+        loggedIn: false,
+        name: ""
+    })
+    useEffect(() => {
+        console.log("App component -> ", config)
+    }, [config]);
     return (
-        <div className="app">            
+        <configContext.Provider value={{...config, setconfig}}>
+            <div className="app">            
             <Router basename="/">
                 <Nav/>
                 <Switch>
@@ -40,6 +51,7 @@ const App = () => {
                 </Switch>
             </Router>
         </div>
+        </configContext.Provider>
     )
 }
 

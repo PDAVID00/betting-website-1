@@ -37,13 +37,7 @@ app.use(function (req, res, next) {
 			"x-sent": true,
 		},
 	};
-	res.status(404).sendFile("./404.html", options, function (err) {
-		if (err) {
-			next(err);
-		} else {
-			console.log("Sent:", "404.html");
-		}
-	});
+	res.status(404).sendFile("./404.html", options, console.error);
 });
 
 io.on("connection", (socket) => {

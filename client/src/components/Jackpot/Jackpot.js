@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import {Redirect} from "react-router-dom"
+
 import { io } from "socket.io-client";
 import { BACK_END_URL } from "../consts";
 
 import "./Jackpot.scss"
-
+import { configContext } from "../../App";
 const JackPot = () => {
+	const context = useContext(configContext);
 	const [game, setGame] = useState({});
 
 	useEffect(() => {
@@ -19,12 +22,11 @@ const JackPot = () => {
 			socket.disconnect();
 		};
 	}, []);
-	return (
-		<div className="jackpot">
-			Jackpot Num -> {game.num}
-			color -> {game.color}
-		</div>
-	);
+    return context.loggedIn ? (
+        <div>
+            BlackJack
+        </div>
+    ) : <Redirect to="/LogIn"/>
 };
 
 export default JackPot;
