@@ -1,13 +1,15 @@
-const path = require("path")
+const path = require("path");
 const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
+const cors = require("cors");
 
 const PORT = process.env.PORT || 80;
 
 const router = require("./router");
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 const io = socketio(server, { cors: { origin: "*" } });
 
@@ -54,7 +56,7 @@ io.on("connection", (socket) => {
 rouletteFun();
 setInterval(() => {
 	rouletteFun();
-}, 2 * 1000 /* 30 secs */);
+}, 30 * 1000 /* 30 secs */);
 
 server.listen(PORT, () =>
 	console.log(`Server is now listening on localhost:${PORT}`)

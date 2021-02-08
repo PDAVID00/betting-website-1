@@ -1,7 +1,7 @@
-
-
-
 const PORT = 80;
-const BACK_END_URL = `localhost:${PORT}`/* `https://1d7e2ca87a36.ngrok.io` */;
+const BACK_END_URL =
+	process.env.NODE_ENV === "dev"
+		? `localhost:${PORT}`
+		: "https://lucid-euler-bab96c.netlify.app/";
 
 module.exports = { BACK_END_URL };

@@ -13,8 +13,14 @@ import logo from "../../img/logo.png";
 
 import { configContext } from "../../App";
 
+import hash from "object-hash";
+import { BACK_END_URL } from "../consts";
+
+import { useSnackbar } from "notistack";
+
 const LogIn = () => {
-	const context = useContext(configContext);
+	/* const context = useContext(configContext); */
+	const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 	const [name, setName] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -32,6 +38,9 @@ const LogIn = () => {
 									type="text"
 									className="input-name"
 									placeholder="Username"
+									onChange={(e) => {
+										setName(e.target.value);
+									}}
 								/>
 							</div>
 						</div>
@@ -43,18 +52,25 @@ const LogIn = () => {
 									type="password"
 									className="input-name"
 									placeholder="Password"
+									onChange={(e) => {
+										setPassword(e.target.value);
+									}}
 								/>
 							</div>
 						</div>
 					</form>
-					<div className="btn-SignIn">
-						<button>
+					<div className="btn-signin">
+						<button
+							onClick={(e) => {
+								console.log(name, password);
+							}}
+						>
 							<Link to="/SignIn">Sign In</Link>
 						</button>
 					</div>
 					<div className="btn-submit">
-						<button>
-							Submit <FontAwesomeIcon icon={faChevronRight} />
+						<button onClick={(e) => {}}>
+							Log In <FontAwesomeIcon icon={faChevronRight} />
 						</button>
 					</div>
 				</div>

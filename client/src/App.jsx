@@ -1,7 +1,8 @@
 import React, {useState, createContext, useEffect} from "react"
 
-
 import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom" 
+
+import {SnackbarProvider } from "notistack"
 
 import Nav from "./components/Nav/Nav"
 import LogIn from "./components/LogIn/LogIn"
@@ -20,6 +21,7 @@ import NotFound404 from "./components/404/404"
 import "./App.scss"
 
 
+
 export const configContext = createContext()
 
 const App = () => {
@@ -31,7 +33,11 @@ const App = () => {
         console.log("App component -> ", config)
     }, [config]);
     return (
-        <configContext.Provider value={{...config, setconfig}}>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}>
+            <configContext.Provider value={{...config, setconfig}}>
             <div className="app">            
             <Router basename="/">
                 <Nav/>
@@ -52,6 +58,7 @@ const App = () => {
             </Router>
         </div>
         </configContext.Provider>
+        </SnackbarProvider>
     )
 }
 
