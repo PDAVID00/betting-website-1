@@ -15,10 +15,9 @@ import { faCoins, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
 	const context = useContext(configContext);
-	const [coins, setCoins] = useState(null);
 
 	useEffect(() => {
-		localStorage.token &&
+		if (localStorage.token) {
 			fetch(`${BACK_END_URL}/auth/checktoken`, {
 				method: "POST",
 				headers: POST_HEADER,
@@ -26,18 +25,18 @@ const Nav = () => {
 			})
 				.then((rawData) => rawData.json())
 				.then((data) => {
-					console.log("data from token -> ", data);
 					if (data.res === true) {
-						setCoins(data.coins);
 						context.setconfig({
 							loggedIn: true,
 							name: data.username,
+							coins: data.coins,
 						});
-					} else {
-						console.log("token not verified");
 					}
 				});
-	});
+		} else {
+			localStorage.removeItem("token");
+		}
+	}, []);
 	return (
 		<ul className="nav-bar">
 			<li className="logo">
@@ -52,17 +51,18 @@ const Nav = () => {
 			</li>
 			{context.loggedIn ? (
 				<React.Fragment>
-					<li className="link align-right logInName">
+					<li className="link align-right coins-div logInName">
+						<a href="/" onClick={(e) => e.preventDefault()}>
+							{context.coins} <FontAwesomeIcon icon={faCoins} />
+						</a>
+					</li>
+					<li className="link align-right">
 						<Link to={`/Profile/${context.name}`} className="label">
 							<b>{context.name}</b>
 						</Link>
 					</li>
-					<li className="link align-right">
-						<a href="/" onClick={(e) => e.preventDefault()}>
-							{coins} <FontAwesomeIcon icon={faCoins} />
-						</a>
-					</li>
-					<li className="link align-right">
+
+					<li className="link align-right logout-btn">
 						<a
 							href="/"
 							onClick={(e) => {
@@ -70,11 +70,12 @@ const Nav = () => {
 								context.setconfig({
 									loggedIn: false,
 									name: "",
+									coins: null,
 								});
 							}}
-							className="logout-btn"
+							className="logout-a"
 						>
-							Logout <FontAwesomeIcon icon={faTimes} />
+							Logout <FontAwesomeIcon icon={faTimes} color="" />
 						</a>
 					</li>
 				</React.Fragment>

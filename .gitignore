@@ -1,5 +1,9 @@
 client/node_modules
 server/node_modules
+server/.firebaserc
+server/.gitignore
+server/firebase.json
+server/public/index.html
 *.db
 build
 .env

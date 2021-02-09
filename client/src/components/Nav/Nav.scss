@@ -3,7 +3,6 @@ ul {
 	background-color: rgb(73, 73, 73);
 	margin-top: 0;
 
-	font-family: monospace;
 	display: flex;
 	align-items: center;
 	flex-direction: row;
@@ -17,18 +16,23 @@ ul {
 
 		&.name,
 		&.link {
-			a:not(.logout-btn) {
+			a {
 				padding: 5px;
 				&:hover {
 					background-color: rgb(92, 92, 92);
 				}
 			}
 		}
-		/* &.logout-btn {
-			:hover {
-				background-color: rgb(219, 7, 7);
+		&.logout-btn {
+			a {
+				transition: 0.2s;
+				&:hover {
+					svg {
+						color: rgb(219, 7, 7);
+					}
+				}
 			}
-		} */
+		}
 		a {
 			color: white;
 			text-decoration: none;
@@ -39,22 +43,25 @@ ul {
 				width: 64px;
 			}
 		}
-
+		&.coins-div {
+			a {
+				svg {
+					color: orange;
+				}
+				&:hover {
+					cursor:default;
+				}
+			}
+		}
 		&.logo {
 			padding-top: 4px;
 		}
-
 		&.logInName {
-			color: white;
-		}
-		&.logInName {
-			margin-left: 67%;
+			margin-left: 64%;
 		}
 
 		&.login {
 			margin-left: 72%;
-		}
-		&.login {
 			a:hover {
 				background-color: rgb(40, 167, 69);
 			}

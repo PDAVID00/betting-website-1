@@ -19,15 +19,22 @@ import Jackpot from "./components/Jackpot/Jackpot"
 import NotFound404 from "./components/404/404"
 
 import "./App.scss"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTimes } from "@fortawesome/free-solid-svg-icons"
 
 
+const notistackRef = React.createRef();
+const onClickDismiss = key => () => { 
+    notistackRef.current.closeSnackbar(key);
+}
 
 export const configContext = createContext()
 
 const App = () => {
     const [config, setconfig] = useState({
         loggedIn: false,
-        name: ""
+        name: "",
+        coins:null
     })
     useEffect(() => {
         console.log("App component -> ", config)
@@ -36,7 +43,12 @@ const App = () => {
         <SnackbarProvider maxSnack={3} anchorOrigin={{
             vertical: 'top',
             horizontal: 'right',
-        }}>
+        }} autoHideDuration={2500}ref={notistackRef}
+        action={(key) => (
+            <button onClick={onClickDismiss(key)} className="Snackbar-dismiss-btn">
+                <FontAwesomeIcon icon={faTimes}/>
+            </button>
+        )}>
             <configContext.Provider value={{...config, setconfig}}>
             <div className="app">            
             <Router basename="/">

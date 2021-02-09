@@ -15,7 +15,7 @@ import logo from "../../img/logo.png";
 import { configContext } from "../../App";
 
 import { encode, hash, makeid } from "../helpers";
-import { BACK_END_URL, POST_HEADER } from "../consts";
+import { AUTH_REQUISITES, BACK_END_URL, POST_HEADER } from "../consts";
 
 import { useSnackbar } from "notistack";
 
@@ -30,12 +30,6 @@ const ERRORS = {
 		inUse: "Username already in use!",
 	},
 	password: { short: "Password too short!" },
-};
-
-const AUTH_REQUISITES = {
-	email: { has: ["@", "."], len: 10 },
-	username: { len: 5 },
-	password: { len: 8 },
 };
 
 const SignIn = () => {
@@ -153,6 +147,7 @@ const SignIn = () => {
 						<Link
 							to="/Games"
 							onClick={(e) => {
+								e.preventDefault();
 								const isValid = isAuthValidClientSide();
 								if (isValid) {
 									const token = encode(makeid(128));
@@ -175,6 +170,9 @@ const SignIn = () => {
 													err: data.err,
 													type: "inUse",
 												});
+												document.querySelector(
+													`.input-${data.err}`
+												).value = "";
 											} else {
 												localStorage.setItem(
 													"token",
@@ -191,21 +189,11 @@ const SignIn = () => {
 													{ variant: "info" }
 												);
 												setconfig({
-													name: username,
 													loggedIn: true,
+													name: username,
 												});
 											}
 										});
-									[
-										".input-email",
-										".input-username",
-										".input-password",
-									].map(
-										(selector) =>
-											(document.querySelector(
-												selector
-											).value = "")
-									);
 								}
 							}}
 						>

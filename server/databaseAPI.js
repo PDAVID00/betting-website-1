@@ -70,19 +70,32 @@ function insertNewUser({ password, email, username, token }, res) {
 	);
 }
 
-function checkLogin({ password, username }, res) {
+function checkLogin({ password, username, token }, res) {
 	DB.all(
 		`SELECT * FROM ${DB_NAME} WHERE password=? AND username=?`,
 		[password, username],
 		(err, rows) => {
-			console.log("rows -> ", rows);
 			if (err) {
-				console.error(err);
 				return res.json({});
 			} else {
-				return res.json({
-					res: true,
-				});
+				if (rows.length !== 0) {
+					DB.run(
+						`UPDATE ${DB_NAME} SET login_token=? WHERE username=?`,
+						[decode(token), username],
+						(err) => {
+							if (err) {
+								console.log(err);
+							} else {
+								return res.json({
+									res: true,
+									coins: rows[0].coins,
+								});
+							}
+						}
+					);
+				} else {
+					return res.json({});
+				}
 			}
 		}
 	);
@@ -115,6 +128,7 @@ function setToken(body, res) {
 			if (err) {
 				console.log(err);
 			} else {
+				console.log("token verified");
 				return res.json({ success: true });
 			}
 		}

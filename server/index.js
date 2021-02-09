@@ -10,10 +10,11 @@ const PORT = process.env.PORT || 80;
 const router = require("./router");
 
 const app = express();
-app.use(cors());
+app.use(
+	cors({ "Access-Control-Allow-Origin": "https://csgolurk.netlify.app/" })
+);
 const server = http.createServer(app);
 const io = socketio(server, { cors: { origin: "*" } });
-
 const rouletteFun = () => {
 	const num = Math.round(Math.random() * 10);
 	const colorNum = Math.random();
