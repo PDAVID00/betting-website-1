@@ -1,8 +1,11 @@
 const PORT = 80;
-const BACK_END_URL = `https://betting-website-375b7.web.app`;
-/* process.env.NODE_ENV === "PROD"
-		? `https://betting-website-375b7.web.app`
-		: `http://localhost:${PORT}` */ const POST_HEADER = {
+const BACK_END_URL =
+	process.env.NODE_ENV === "production"
+		? process.env.LINK
+		: `http://localhost:${PORT}`;
+
+console.log(`Using ${BACK_END_URL}`);
+const POST_HEADER = {
 	Accept: "application/json, text/plain, */*",
 	"Content-Type": "application/json",
 };

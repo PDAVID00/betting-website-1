@@ -4,6 +4,7 @@ server/.firebaserc
 server/.gitignore
 server/firebase.json
 server/public/index.html
+client/.env
 *.db
 build
 .env
