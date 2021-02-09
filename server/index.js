@@ -3,7 +3,8 @@ const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
 const cors = require("cors");
-
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
 const PORT = process.env.PORT || 80;
 
 const router = require("./router");
@@ -28,6 +29,10 @@ let Games = {
 	roulette: {},
 	jackpot: {},
 };
+app.use(morgan("dev"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.raw());
 app.use(express.static("public"));
 app.use(router);
 app.use(function (req, res, next) {

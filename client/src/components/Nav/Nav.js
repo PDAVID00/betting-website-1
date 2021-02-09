@@ -1,17 +1,43 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import logo from "../../img/money-bag.png";
 import deagle from "../../img/deagle.png";
+import { decode, encode } from "../helpers";
 
 import "./Nav.scss";
 
 import { configContext } from "../../App";
+import { BACK_END_URL, POST_HEADER } from "../consts";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoins, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const Nav = () => {
 	const context = useContext(configContext);
-	console.log("context ", context);
+	const [coins, setCoins] = useState(null);
 
+	useEffect(() => {
+		localStorage.token &&
+			fetch(`${BACK_END_URL}/auth/checktoken`, {
+				method: "POST",
+				headers: POST_HEADER,
+				body: JSON.stringify({ token: localStorage.token }),
+			})
+				.then((rawData) => rawData.json())
+				.then((data) => {
+					console.log("data from token -> ", data);
+					if (data.res === true) {
+						setCoins(data.coins);
+						context.setconfig({
+							loggedIn: true,
+							name: data.username,
+						});
+					} else {
+						console.log("token not verified");
+					}
+				});
+	});
 	return (
 		<ul className="nav-bar">
 			<li className="logo">
@@ -25,24 +51,46 @@ const Nav = () => {
 				</Link>
 			</li>
 			{context.loggedIn ? (
-				<li className="align-right logInName">
-					<Link to={`/Profile/${context.name}`} className="label">
-						<b>{context.name}</b>
-					</Link>
-				</li>
+				<React.Fragment>
+					<li className="link align-right logInName">
+						<Link to={`/Profile/${context.name}`} className="label">
+							<b>{context.name}</b>
+						</Link>
+					</li>
+					<li className="link align-right">
+						<a href="/" onClick={(e) => e.preventDefault()}>
+							{coins} <FontAwesomeIcon icon={faCoins} />
+						</a>
+					</li>
+					<li className="link align-right">
+						<a
+							href="/"
+							onClick={(e) => {
+								localStorage.removeItem("token");
+								context.setconfig({
+									loggedIn: false,
+									name: "",
+								});
+							}}
+							className="logout-btn"
+						>
+							Logout <FontAwesomeIcon icon={faTimes} />
+						</a>
+					</li>
+				</React.Fragment>
 			) : (
-				[
-					<li className="link align-right login" key="1">
+				<React.Fragment>
+					<li className="link align-right login">
 						<Link to="/LogIn" className="link">
 							Log In
 						</Link>
-					</li>,
-					<li className="link align-right signin" key="2">
+					</li>
+					<li className="link align-right signin">
 						<Link to="/SignIn" className="link">
 							Sign In
 						</Link>
-					</li>,
-				].map((listItem) => listItem)
+					</li>
+				</React.Fragment>
 			)}
 			<li className="most-right">
 				<Link to="/Profile/">

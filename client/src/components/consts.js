@@ -1,7 +1,9 @@
 const PORT = 80;
-const BACK_END_URL =
-	process.env.NODE_ENV === "dev"
-		? `localhost:${PORT}`
-		: "https://lucid-euler-bab96c.netlify.app/";
+const BACK_END_URL = `http://localhost:${PORT}`;
 
-module.exports = { BACK_END_URL };
+const POST_HEADER = {
+	Accept: "application/json, text/plain, */*",
+	"Content-Type": "application/json",
+};
+
+module.exports = { BACK_END_URL, POST_HEADER };

@@ -17,13 +17,18 @@ ul {
 
 		&.name,
 		&.link {
-			a {
+			a:not(.logout-btn) {
 				padding: 5px;
 				&:hover {
 					background-color: rgb(92, 92, 92);
 				}
 			}
 		}
+		/* &.logout-btn {
+			:hover {
+				background-color: rgb(219, 7, 7);
+			}
+		} */
 		a {
 			color: white;
 			text-decoration: none;

@@ -1,40 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
-const sqlite3 = require("sqlite3");
-
-const DB_NAME = "testing"; /* "users" */
-const DB_PARAMS = `(
-	id,
-	password,
-	email,
-	username,
-	display_name,
-	coins
- )`;
-const db = new sqlite3.Database("./public/database.db", (err) => {
-	if (err) {
-		return console.error(err.message);
-	}
-	console.log("Connected to db");
-});
-db.serialize(() => {
-	db.run(
-		`CREATE TABLE IF NOT EXISTS ${DB_NAME} (
-		id integer NOT NULL PRIMARY KEY,
-		password text NOT NULL,
-		email text NOT NULL UNIQUE,
-		username text NOT NULL UNIQUE,
-		display_name text,
-		coins integer NOT NULL
-	 )`,
-		(err) => {
-			if (err) {
-				console.error(err);
-			} else console.log("database created or already exists");
-		}
-	);
-});
+const databaseAPI = require("./databaseAPI");
 
 router.get("/", (req, res) => {
 	res.send("Home page");
@@ -46,22 +13,28 @@ router.get("/profile/:profile", (req, res) => {
 });
 
 router.post("/auth/Checklogin", (req, res) => {
-	console.log(req.body);
-	
+	databaseAPI.checkLogin(req.body, res)
 });
 
-router.post("auth/newUser", (req, res) => {
-	console.log(req.body);
-	const valid = false;
-	if (valid) {
-		db.serialize(`INSERT INTO ${DB_NAME} ${DB_PARAMS} VALUES (?,?,?,?,?)`, [req.body], (err) => {
-			if (err) {
-				console.error(err)
-			} else {
-				console.log("inserted into db -> ", req.body)
-			}
-		});
-	}
+router.post("/auth/newUser", (req, res) => {
+	console.log("body -> ", req.body);
+	databaseAPI.insertNewUser(req.body, res);
 });
+
+router.get("/auth/deleteUsersDB", (req, res) => {
+	databaseAPI.deleteUsersDB();
+});
+
+router.post("/auth/checktoken", (req, res) => {
+	databaseAPI.checkToken(req.body, res);
+});
+
+router.post("/auth/setToken", (req, res) => {
+	databaseAPI.setToken(req.body, res);
+});
+
+router.get("/warp/caralho", (req, res) => {
+	return res.send("<h1>O CARALHO</h1>")
+})
 
 module.exports = router;
