@@ -13,7 +13,7 @@ const notFound404 = () => {
 					<b className="red">404</b> Not Found
 				</h1>
 				<img src={sadPeepo} alt="sadPeepo"/>
-				<Link to="/Games">
+				<Link to="/">
 					<button>Go to Home page</button>
 				</Link>
 			</div>
