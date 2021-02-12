@@ -54,13 +54,10 @@ const App = () => {
             <Router basename="/">
                 <Nav/>
                 <Switch>
-                    <Route path="/" exact>
-                        <Redirect to="/Games"/>
-                    </Route>
+                    <Route path="/" exact component={Games}/>
                     <Route path="/SignIn" exact component={SignIn}/>
                     <Route path="/LogIn" exact component={LogIn}/>
                     <Route path="/profile" exact component={Profile}/>
-                    <Route path="/Games" exact component={Games}/>
                     <Route path="/Games/roulette" exact component={Roulette}/>
                     <Route path="/Games/blackjack" exact component={BlackJack}/>
                     <Route path="/Games/crash" exact component={Crash}/>
