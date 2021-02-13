@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./Game.scss";
+import "./GameCard.scss";
 
 import Roulette from "../../img/Games/Roulette.jpg";
 import BlackJack from "../../img/Games/BlackJack.png";
@@ -14,7 +14,7 @@ const Imgs = {
 	JackPot,
 };
 
-const Game = (props) => {
+const GameCard = (props) => {
 	return (
 		<div className="card">
 			<img src={Imgs[props.imgSrc]} alt="Avatar" />
@@ -28,4 +28,4 @@ const Game = (props) => {
 	);
 };
 
-export default Game;
+export default GameCard;
