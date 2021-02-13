@@ -45,7 +45,7 @@ const Nav = () => {
 				</Link>
 			</li>
 			<li className="link Games-link">
-				<Link to="/Games" className="link">
+				<Link to="/" className="link">
 					Games
 				</Link>
 			</li>
