@@ -61,10 +61,20 @@ function insertNewUser({ password, email, username, token }, res) {
 		[password, email, username, decode(token)],
 		(err) => {
 			if (err) {
-				console.log(`DB-INSERT-${err.message.split(".")[1]}`);
 				return res.json({ err: err.message.split(".")[1] });
 			} else {
-				return res.json({ status: 200 });
+				DB.all(
+					`SELECT * FROM ${DB_NAME} WHERE password=? AND username=?`,
+					[password, username],
+					(err, rows) => {
+						return res.json({
+							status: 200,
+							res: true,
+							coins: rows[0].coins,
+							id: rows[0].id,
+						});
+					}
+				);
 			}
 		}
 	);
@@ -89,6 +99,7 @@ function checkLogin({ password, username, token }, res) {
 								return res.json({
 									res: true,
 									coins: rows[0].coins,
+									id: rows[0].id,
 								});
 							}
 						}
@@ -103,7 +114,7 @@ function checkLogin({ password, username, token }, res) {
 
 function checkToken(body, res) {
 	DB.all(
-		`SELECT username, coins FROM ${DB_NAME} WHERE login_token=?`,
+		`SELECT username, coins, id FROM ${DB_NAME} WHERE login_token=?`,
 		[decode(body.token)],
 		(err, rows) => {
 			if (err) {
@@ -114,6 +125,7 @@ function checkToken(body, res) {
 					res: true,
 					username: rows[0].username,
 					coins: rows[0].coins,
+					id: rows[0].id,
 				});
 			}
 		}
