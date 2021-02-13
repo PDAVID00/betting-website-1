@@ -90,7 +90,7 @@ const LogIn = () => {
 					</div>
 					<div className="btn-submit">
 						<Link
-							to="/Games"
+							to="/"
 							onClick={(e) => {
 								e.preventDefault();
 								const valid = isAuthValidClientSide();
@@ -123,6 +123,7 @@ const LogIn = () => {
 													loggedIn: true,
 													name: username,
 													coins: data.coins,
+													id: data.id
 												});
 												localStorage.setItem(
 													"token",
@@ -157,7 +158,7 @@ const LogIn = () => {
 			</div>
 		</div>
 	) : (
-		<Redirect to="/Games" />
+		<Redirect to="/" />
 	);
 };
 

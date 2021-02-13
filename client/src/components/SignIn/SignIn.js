@@ -145,7 +145,7 @@ const SignIn = () => {
 					</div>
 					<div className="btn-sigin">
 						<Link
-							to="/Games"
+							to="/"
 							onClick={(e) => {
 								e.preventDefault();
 								const isValid = isAuthValidClientSide();
@@ -191,6 +191,8 @@ const SignIn = () => {
 												setconfig({
 													loggedIn: true,
 													name: username,
+													coins: data.coins,
+													id: data.id,
 												});
 											}
 										});
@@ -204,7 +206,7 @@ const SignIn = () => {
 			</div>
 		</div>
 	) : (
-		<Redirect to="/Games" />
+		<Redirect to="/" />
 	);
 };
 
