@@ -8,11 +8,29 @@ const morgan = require("morgan");
 const PORT = process.env.PORT || 80;
 
 const router = require("./router");
+const databaseAPI = require("./databaseAPI");
 
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
 const io = socketio(server, { cors: { origin: "*" } });
+
+function getRandom(category) {
+	const allBetAmount = Object.keys(bets[category]).reduce((acc, e) => {
+		return acc + bets[category][e].betAmount;
+	}, 0);
+	const sum = Object.keys(bets[category]).reduce((acc, e) => {
+		return acc + bets[category][e].chance;
+	}, 0);
+	var pick = Math.random() * sum;
+	for (let j in bets[category]) {
+		pick -= bets[j].chance;
+		if (pick <= 0) {
+			return j;
+		}
+	}
+}
+
 const rouletteFun = () => {
 	const num = Math.round(Math.random() * 10);
 	const colorNum = Math.random();
@@ -48,7 +66,7 @@ app.use(function (req, res, next) {
 
 let connectedUsers = { jackpot: {} };
 let bets = { jackpot: {} };
-let timers = { jackpot: 15 };
+let timers = { jackpot: 30 };
 io.on("connection", (socket) => {
 	console.log("New connection received!");
 	socket.on("disconnect", () => {
@@ -74,43 +92,83 @@ io.on("connection", (socket) => {
 		console.log(connectedUsers);
 		console.log(`${data.name} logged in jackpot`);
 		console.log(data);
-		socket.emit("jackpot", { data: bets.jackpot, timer: timers.jackpot });
+		socket.emit("jackpot", {
+			data: bets.jackpot,
+			timer: timers.jackpot,
+			state: { message: "Not enough players", code: 1 },
+		});
 	});
 	socket.on("jackpot-newBet", (data) => {
-		console.log("jackpot-UpdateBets", data);
-		if (bets.jackpot[socket.id] && bets.jackpot[socket.id] !== {}) {
-			bets.jackpot[socket.id].betAmount += parseInt(data.betAmount);
-		} else {
-			bets.jackpot[socket.id] = {
-				name: data.name,
-				betAmount: parseInt(data.betAmount),
-			};
-		}
-		console.log(bets.jackpot);
-		io.emit("jackpot-UpdateBets", bets.jackpot);
+		console.log("jackpot-newBet", data);
+		databaseAPI.hasCoins(
+			{ id: data.id, coins: data.betCoins },
+			({ approved, DBcoins }) => {
+				if (approved) {
+					databaseAPI.newBet({ id: data.id, coins: data.betCoins });
+					console.log("jackpot-UpdateBets", data);
+					if (
+						bets.jackpot[socket.id] &&
+						bets.jackpot[socket.id] !== {}
+					) {
+						bets.jackpot[socket.id].betCoins += parseInt(
+							data.betCoins
+						);
+					} else {
+						bets.jackpot[socket.id] = {
+							name: data.name,
+							betAmount: parseFloat(data.betCoins),
+						};
+					}
+					const allBetAmount = Object.keys(bets.jackpot).reduce(
+						(acc, e) => {
+							return acc + bets.jackpot[e].betAmount;
+						},
+						0
+					);
+					Object.keys(bets.jackpot).map((e) => {
+						bets.jackpot[e].chance = (
+							bets.jackpot[e].betAmount / allBetAmount
+						).toFixed(2);
+					});
+					socket.emit("jackpot-newBet-result", {
+						coins: DBcoins - data.coins,
+					});
+					io.emit("jackpot-UpdateBets", bets.jackpot);
+				} else {
+					socket.emit("hacker?");
+				}
+			}
+		);
 	});
 });
 let jackpotWinnerAnnounced = false;
+let lastJackpot = 0;
 setInterval(() => {
 	if (timers.jackpot < 0) {
 		if (!jackpotWinnerAnnounced) {
-			const random = Math.floor(
-				Math.random() * Object.keys(bets.jackpot).length
-			);
-			const winnerBet = Object.keys(bets.jackpot).reduce((acc, e) => {
-				return acc + bets.jackpot[e].betAmount;
-			}, 0);
-			try {
-				io.emit("jackpot-winner", {
-					winner:
-						connectedUsers.jackpot[
-							Object.keys(bets.jackpot)[random]
-						].id,
-					amount: winnerBet,
-				});
-			} catch (error) {
+			console.log("jackpot-betting time ended");
+			if (Object.keys(bets.jackpot).length <= 1) {
 				io.emit("jackpot-winner", { winner: null });
+			} else {
+				const random = Math.floor(
+					Math.random() * Object.keys(bets.jackpot).length
+				);
+				const winnerBet = Object.keys(bets.jackpot).reduce((acc, e) => {
+					return acc + bets.jackpot[e].betAmount;
+				}, 0);
+				try {
+					io.emit("jackpot-winner", {
+						winner:
+							connectedUsers.jackpot[
+								Object.keys(bets.jackpot)[random]
+							].id,
+						amount: winnerBet,
+					});
+				} catch (error) {
+					io.emit("jackpot-winner", { winner: null });
+				}
 			}
+			console.log("jackpot-winner");
 			jackpotWinnerAnnounced = true;
 		}
 		if (timers.jackpot === -7) {
@@ -119,6 +177,7 @@ setInterval(() => {
 
 			timers.jackpot = 30;
 			io.emit("jackpot-startTimer");
+			console.log("Jackpot-startTimer");
 		}
 	}
 	timers.jackpot = Number((timers.jackpot - 0.1).toFixed(1));

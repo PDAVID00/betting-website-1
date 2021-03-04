@@ -121,6 +121,7 @@ function checkToken(body, res) {
 				console.error(err);
 				return res.json({});
 			} else {
+				console.log(rows);
 				return res.json({
 					res: true,
 					username: rows[0].username,
@@ -132,19 +133,62 @@ function checkToken(body, res) {
 	);
 }
 
-function setToken(body, res) {
+function setToken({ token, username }, res) {
 	DB.run(
 		`UPDATE ${DB_NAME} SET login_token=? WHERE username=?`,
-		[decode(body.token), body.username],
+		[decode(token), username],
 		(err) => {
 			if (err) {
 				console.log(err);
 			} else {
-				console.log("token verified");
+				console.log(`token verified for ${username}`);
 				return res.json({ success: true });
 			}
 		}
 	);
+}
+
+function hasCoins({ id, coins }, cb) {
+	console.log(`hascoins -> ${id} :: ${coins}`);
+	console.log(`Approving for id=${id} ...`);
+	DB.all(`SELECT coins FROM ${DB_NAME} WHERE id=?`, [id], (err, rows) => {
+		if (err) {
+			return res.json({});
+		} else {
+			if (rows.length !== 0) {
+				cb({
+					approved: rows[0].coins >= coins,
+					DBcoins: rows[0].coins,
+				});
+			}
+		}
+		console.log(
+			`Approving for id=${id} ${rows[0].coins >= coins ? "ok" : "nope"}`
+		);
+	});
+}
+
+function newBet(body) {
+	hasCoins({ id: body.id, coins: body.coins }, ({ approved, DBcoins }) => {
+		if (approved) {
+			console.log(
+				`${body.id} betted ${body.coins}, had:${DBcoins}, has:${
+					DBcoins - body.coins
+				}`
+			);
+			DB.run(
+				`UPDATE ${DB_NAME} SET coins=? WHERE id=?`,
+				[DBcoins - body.coins, body.id],
+				(err) => {
+					if (err) {
+						console.log(err);
+					} else {
+						console.log(`New Bet -> ${body.coins}`);
+					}
+				}
+			);
+		}
+	});
 }
 
 function dumpAll() {
@@ -158,13 +202,15 @@ function dumpAll() {
 }
 
 function deleteUsersDB() {
-	console.log("");
+	console.log("DELETED Users DB");
 	DB.run(`DELETE FROM TABLE ${DB_NAME}`);
 }
 
 module.exports = {
 	insertNewUser,
 	deleteUsersDB,
+	hasCoins,
+	newBet,
 	dumpAll,
 	setToken,
 	checkToken,

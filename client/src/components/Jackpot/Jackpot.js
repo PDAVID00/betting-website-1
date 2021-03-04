@@ -8,7 +8,7 @@ import "./Jackpot.scss";
 import { configContext } from "../../App";
 import { useSnackbar } from "notistack";
 
-const isNumber = (s) => /^\d+$/.test(s);
+const isNumber = (s) => /^[0-9]+(\.)?[0-9]*$/.test(s);
 
 const JackPot = () => {
 	const { setconfig, loggedIn, name, coins, id } = useContext(configContext);
@@ -17,6 +17,7 @@ const JackPot = () => {
 	const [bets, setBets] = useState([]);
 	const [bet, setBet] = useState(0);
 	const [betsAmount, setbetsAmount] = useState(0);
+	const [gameState, setGameState] = useState("");
 	const socket = useMemo(() => io(BACK_END_URL), []);
 
 	const setStateWithData = (res) => {
@@ -28,6 +29,7 @@ const JackPot = () => {
 			setbetsAmount((betsAmount) =>
 				objkeys.reduce((sum, bet) => sum + data[bet].betAmount, 0)
 			);
+			setGameState(res.state);
 		}
 		setclock_time((clock_time) => (res.timer ? res.timer : clock_time));
 	};
@@ -38,7 +40,7 @@ const JackPot = () => {
 			console.log("started jackpot clock");
 			interval = setInterval(function () {
 				setclock_time((clock_time) => {
-					console.log("still running");
+					console.log(clock_time);
 					if (clock_time <= 0) {
 						return 0;
 					} else {
@@ -58,6 +60,8 @@ const JackPot = () => {
 					`Congratulations! You just won ${data.amount}!`,
 					{ variant: "success" }
 				);
+			} else if (bet > 0) {
+				enqueueSnackbar(`Good luck next time!`, { variant: "error" });
 			}
 			setBets([]);
 			setBet(0);
@@ -66,6 +70,14 @@ const JackPot = () => {
 		});
 		socket.on("jackpot-startTimer", () => {
 			setclock_time(30);
+		});
+		socket.on("jackpot-newBet-result", ({ coins }) => {
+			setBet(coins);
+		});
+		socket.on("hacker?", () => {
+			enqueueSnackbar(`U tried, next time ur account will get del`, {
+				variant: "error",
+			});
 		});
 		socket.emit("jackpot-join", { name, coins, id });
 		console.log("clock-time -> ", clock_time);
@@ -82,7 +94,7 @@ const JackPot = () => {
 
 			<div className="game">
 				<span className="timer-label">
-					{clock_time === 0 ? "Waiting for server!" : clock_time}
+					{clock_time === 0 ? "Waiting for players!" : clock_time}
 				</span>
 				<div className="bet-controller">
 					<input
@@ -94,7 +106,7 @@ const JackPot = () => {
 						onClick={(e) => {
 							setclock_time((time) => time);
 							const el = document.querySelector(".input-bet");
-							const val = parseInt(
+							const val = parseFloat(
 								el.value.replace("e", "").replace("E", "")
 							);
 							if (isNumber(val)) {
@@ -102,7 +114,7 @@ const JackPot = () => {
 									socket.emit("jackpot-newBet", {
 										name,
 										id,
-										betAmount: val,
+										betCoins: val,
 									});
 									setBet((bet) => bet + val);
 								} else {
@@ -132,7 +144,7 @@ const JackPot = () => {
 					<div className="bet" key={i}>
 						<span className="name">{bet.name}</span>
 						<span className="betAmount">
-							Bet -> {bet.betAmount}$
+							Bet -> {bet.betAmount}$ -- {bet.chance * 100}%
 						</span>
 					</div>
 				))}

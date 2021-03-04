@@ -13,7 +13,7 @@ router.get("/profile/:profile", (req, res) => {
 });
 
 router.post("/auth/Checklogin", (req, res) => {
-	databaseAPI.checkLogin(req.body, res)
+	databaseAPI.checkLogin(req.body, res);
 });
 
 router.post("/auth/newUser", (req, res) => {
@@ -34,7 +34,7 @@ router.post("/auth/setToken", (req, res) => {
 });
 
 router.get("/warp/caralho", (req, res) => {
-	return res.send("<h1>O CARALHO</h1>")
-})
+	return res.send("<h1>O CARALHO</h1>");
+});
 
 module.exports = router;
