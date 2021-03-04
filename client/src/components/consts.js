@@ -1,8 +1,8 @@
 const PORT = 80;
-const BACK_END_URL =
-	process.env.NODE_ENV === "production"
-		? process.env.LINK
-		: `http://localhost:${PORT}`;
+const PLAYING = false;
+const BACK_END_URL = PLAYING
+	? "https://4ac2ebd57efe.ngrok.io"
+	: `http://localhost:${PORT}`;
 
 console.log(`Using ${BACK_END_URL}`);
 const POST_HEADER = {
